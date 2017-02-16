@@ -120,16 +120,19 @@ define("/assets/lib/Form", ["$"], function (require, exports, module) {
         setVal: function (panel, data) {
             if (!data) return;
             panel.find("[name]").each(function () {
-                var ele = $(this), txt = data[$(this).attr("name")];
+                var ele = $(this), txt = data[ele.attr("name")] || "";
                 //当为单选框时，需要特殊处理
-                if (ele.attr["type"] == "radio" && ele.val() == txt) {
-                    ele.prop("checked", true);
-                    return;
+                if (ele.attr["type"] == "radio") {
+                    if ( ele.val() == txt ) {
+                        ele.prop("checked", true);
+                    }
+                } else {
+                    if (ele.is("select")) {
+                        ele.attr("data-curVal", txt);
+                    }
+                    ele.val(txt);
                 }
-                if (ele.is("select")) {
-                    ele.attr("data-curVal", txt);
-                }
-                ele.val(txt);
+
             });
         },
         
