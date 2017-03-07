@@ -119,21 +119,23 @@ define("/assets/lib/Form", ["$"], function (require, exports, module) {
         
         setVal: function (panel, data) {
             if (!data) return;
-            panel.find("[name]").each(function () {
-                var ele = $(this), txt = data[ele.attr("name")] || "";
+            var ele, txt;
+            for (var i in data) {
+                if (!data.hasOwnProperty(i)) {
+                    continue;
+                }
+                ele = panel.find('[name="' + i + '"]');
+                txt = data[i];
                 //当为单选框时，需要特殊处理
-                if (ele.attr["type"] == "radio") {
-                    if ( ele.val() == txt ) {
-                        ele.prop("checked", true);
-                    }
+                if (ele.is(":radio")) {
+                    ele.filter('[value="' + txt + '"]').prop("checked", true);
                 } else {
                     if (ele.is("select")) {
                         ele.attr("data-curVal", txt);
                     }
                     ele.val(txt);
                 }
-
-            });
+            }
         },
         
         setSelVal: function (ele, val, f) {
